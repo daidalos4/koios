@@ -15,7 +15,7 @@ const Contribute = () => {
         </div>
         <Button asChild className="w-full md:w-auto text-[10px] lg:text-xs">
           <a
-            href="https://github.com/adrbn/koios"
+            href="https://github.com/daidalos4/koios"
             rel="noopener noreferrer"
             target="_blank"
           >

@@ -73,7 +73,7 @@ export const useMenuItems = () => {
     {
       icon: BugIcon,
       label: "Report a bug",
-      href: "https://github.com/adrbn/koios/issues/new",
+      href: "https://github.com/daidalos4/koios/issues/new",
     },
     {
       icon: PowerIcon,
@@ -92,7 +92,7 @@ export const useMenuItems = () => {
     {
       title: "Github",
       icon: GithubIcon,
-      link: "https://github.com/adrbn/koios",
+      link: "https://github.com/daidalos4/koios",
     },
   ];
 
