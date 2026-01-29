@@ -16,12 +16,16 @@ jobs:
         include:
           - platform: 'macos-latest' # for ARM build (Apple Silicon)
             args: '--target aarch64-apple-darwin'
-          - platform: 'macos-13' # for Intel build (x86_64)
+            rust_target: 'aarch64-apple-darwin'
+          - platform: 'macos-14' # for Intel build (x86_64)
             args: '--target x86_64-apple-darwin'
+            rust_target: 'x86_64-apple-darwin'
           - platform: 'ubuntu-22.04'
             args: ''
+            rust_target: ''
           - platform: 'windows-latest'
             args: ''
+            rust_target: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -41,9 +45,9 @@ jobs:
           cache: 'npm'
 
       - name: Install Rust stable
-        uses: dtolnay/rust-action@stable
+        uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || matrix.platform == 'macos-13' && 'x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.rust_target }}
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
