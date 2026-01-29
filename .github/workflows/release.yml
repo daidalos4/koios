@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest' # for ARM build (Apple Silicon)
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-13' # for Intel build (x86_64)
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2-dev
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-action@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || matrix.platform == 'macos-13' && 'x86_64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Build the app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Koios ${{ github.ref_name }}'
+          releaseBody: |
+            ## Koios ${{ github.ref_name }}
+            
+            Free and Open Source AI Assistant - All features unlocked. No license required!
+            
+            ### Downloads
+            - **macOS (Apple Silicon)**: Koios_x.x.x_aarch64.dmg
+            - **macOS (Intel)**: Koios_x.x.x_x64.dmg  
+            - **Windows**: Koios_x.x.x_x64-setup.exe
+            - **Linux**: koios_x.x.x_amd64.deb / koios_x.x.x_amd64.AppImage
+            
+            ### Features
+            - 🤖 Connect to any AI provider (OpenAI, Anthropic, local LLM via LM Studio)
+            - 🎤 Voice input with Whisper (local or cloud)
+            - ⌨️ Global shortcuts for quick access
+            - 🎨 Beautiful dark/light themes
+            - 💬 Unlimited chats and conversations
+            - 🌍 Multi-language response support
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}

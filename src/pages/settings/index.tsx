@@ -3,7 +3,6 @@ import {
   AlwaysOnTopToggle,
   AppIconToggle,
   AutostartToggle,
-  LocalServers,
 } from "./components";
 import { PageLayout } from "@/layouts";
 
@@ -12,9 +11,6 @@ const Settings = () => {
     <PageLayout title="Settings" description="Manage your settings">
       {/* Theme */}
       <Theme />
-
-      {/* Local AI Servers */}
-      <LocalServers />
 
       {/* Autostart Toggle */}
       <AutostartToggle />

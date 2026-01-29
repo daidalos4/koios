@@ -1,7 +1,8 @@
 import { PageLayout } from "@/layouts";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components";
-import { CheckCircle2, Sparkles, Settings, MessageSquare, Mic } from "lucide-react";
+import { CheckCircle2, Settings, MessageSquare, Mic, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import logoImage from "../../../images/logo.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const Dashboard = () => {
         <CardContent className="p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="flex size-10 items-center justify-center rounded-lg bg-primary">
-              <Sparkles className="size-5 text-primary-foreground" />
+              <img src={logoImage} alt="Koios" className="size-6" />
             </div>
             <div>
               <CardTitle className="text-lg">Welcome to Koios!</CardTitle>
